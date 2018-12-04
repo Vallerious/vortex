@@ -5,7 +5,6 @@ import com.webserver.objects.Request;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class RequestParser implements IRequestParser {
     private static final String FIRST_LINE_REGEX = "\\s+";

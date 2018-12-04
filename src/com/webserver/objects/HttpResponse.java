@@ -7,13 +7,15 @@ public interface HttpResponse {
 
     int getStatusCode();
 
-    byte[] getContent();
+    byte[] getBody();
 
     byte[] getWholeResponseData();
 
+    void setWholeResponseData(byte[] data);
+
     void setStatusCode(int statusCode);
 
-    void setContent(byte[] content);
+    void setBody(byte[] content);
 
     void addHeader(String header, String value);
 }

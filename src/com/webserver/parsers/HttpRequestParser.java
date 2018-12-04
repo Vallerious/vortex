@@ -1,7 +1,6 @@
 package com.webserver.parsers;
 
 import com.webserver.objects.Request;
-import org.omg.CORBA.Environment;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;

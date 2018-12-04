@@ -7,9 +7,10 @@ public class Response implements HttpResponse {
     private int statusCode;
     private byte[] wholeResponseData;
 
+
     @Override
     public HashMap<String, String> getHeaders() {
-        return null;
+        return headers;
     }
 
     @Override
@@ -18,7 +19,7 @@ public class Response implements HttpResponse {
     }
 
     @Override
-    public byte[] getContent() {
+    public byte[] getBody() {
         return new byte[0];
     }
 
@@ -28,12 +29,17 @@ public class Response implements HttpResponse {
     }
 
     @Override
+    public void setWholeResponseData(byte[] data) {
+
+    }
+
+    @Override
     public void setStatusCode(int statusCode) {
 
     }
 
     @Override
-    public void setContent(byte[] content) {
+    public void setBody(byte[] content) {
 
     }
 
