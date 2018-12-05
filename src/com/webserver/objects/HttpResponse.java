@@ -1,21 +1,21 @@
 package com.webserver.objects;
 
+import com.webserver.enums.StatusCodes;
+
 import java.util.HashMap;
 
 public interface HttpResponse {
-    HashMap<String, String> getHeaders();
+    HashMap<String, Object> getHeaders();
 
-    int getStatusCode();
+    StatusCodes getStatusCode();
 
     byte[] getBody();
 
-    byte[] getWholeResponseData();
-
-    void setWholeResponseData(byte[] data);
-
-    void setStatusCode(int statusCode);
+    void setStatusCode(StatusCodes statusCode);
 
     void setBody(byte[] content);
 
-    void addHeader(String header, String value);
+    void addHeader(String header, Object value);
+
+    String toString();
 }

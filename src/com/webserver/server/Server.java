@@ -4,6 +4,7 @@ import com.webserver.constants.WebConstants;
 import com.webserver.handlers.ConnectionHandler;
 import com.webserver.handlers.RequestHandler;
 import com.webserver.parsers.HttpRequestParser;
+import com.webserver.parsers.ResponseSerializer;
 
 import javax.lang.model.type.NullType;
 import java.io.IOException;
@@ -27,15 +28,15 @@ public class Server {
         while (true) {
             try (Socket clientSocket = this.serverSocket.accept()) {
                 clientSocket.setSoTimeout(WebConstants.SOCKET_TIMEOUT_MILLISECONDS);
-
-                ConnectionHandler connectionHandler = new ConnectionHandler(clientSocket, new RequestHandler(new HttpRequestParser()));
-
                 // This is like a promise, but we do not need any value to return so
                 // we could have used something else.
-                FutureTask task = new FutureTask(connectionHandler, null);
+                FutureTask task = new FutureTask(new ConnectionHandler(clientSocket, new HttpRequestParser()), null);
+
                 task.run();
             } catch(SocketTimeoutException ste) {
                 // Print something about socket timeout.
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }

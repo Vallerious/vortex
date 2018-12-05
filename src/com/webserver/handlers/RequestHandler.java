@@ -1,51 +1,31 @@
 package com.webserver.handlers;
 
-import com.webserver.enums.Method;
 import com.webserver.objects.Request;
 import com.webserver.objects.Response;
-import com.webserver.parsers.HttpRequestParser;
+import com.webserver.parsers.ResponseSerializer;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-public class RequestHandler {
-    private HttpRequestParser requestParser;
+public abstract class RequestHandler {
+    protected ResponseSerializer responseSerializer;
 
-    public RequestHandler(HttpRequestParser requestParser) {
-        this.requestParser = requestParser;
+    public RequestHandler(ResponseSerializer responseSerializer) {
+        this.responseSerializer = responseSerializer;
     }
 
-    public byte[] handle(String reqContent) {
-        Request req = this.requestParser.parse(reqContent);
+    public byte[] handle(Request req) {
         Response res = new Response();
 
-        if (req.getMethod() == Method.GET) {
-            String path = req.getUrl();
-            Path filePath;
+        Date d1 = new Date();
+        SimpleDateFormat df = new SimpleDateFormat("MM/dd/YYYY HH:mm a");
+        res.addHeader("Date", df.format(d1));
+        res.addHeader("Server", "Valeri Server 11");
+        res.addHeader("Last-Modified", df.format(d1));
+        res.addHeader("Connection", "Keep-Alive");
 
-            if (path.contains(".html") || path.contains(".htm")) {
-                filePath = Paths.get("src/resources/pages", path);
-            } else if (!path.contains(".")) {
-                filePath = Paths.get("src/resources/pages", path + ".html");
-            } else {
-                filePath = Paths.get("src/resources/assets", path);
-            }
-
-            File asset = new File(filePath.toString());
-            try {
-                res.setWholeResponseData(Files.readAllBytes(asset.toPath()));
-            } catch (IOException e) {
-                // set different response
-            }
-
-            
-        }
-
-        return new byte[1];
+        return handle_internal(req, res);
     }
+
+    protected abstract byte[] handle_internal(Request req, Response res);
 }
