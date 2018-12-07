@@ -1,7 +1,8 @@
 package com.webserver.enums;
 
 public enum StatusCodes {
-    OK(200);
+    OK(200),
+    NotFound(404);
 
     private int statusCode;
 

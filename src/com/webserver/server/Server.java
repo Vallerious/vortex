@@ -22,6 +22,7 @@ public class Server {
     }
 
     public void run() throws IOException {
+        System.out.println("Server listening on port: " + this.port);
         this.serverSocket = new ServerSocket(this.port);
         this.serverSocket.setSoTimeout(WebConstants.SOCKET_TIMEOUT_MILLISECONDS);
 

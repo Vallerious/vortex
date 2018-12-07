@@ -13,6 +13,7 @@ public class Response implements HttpResponse {
 
     public Response() {
         this.headers = new HashMap<>();
+        this.body = new byte[0];
     }
 
     @Override
