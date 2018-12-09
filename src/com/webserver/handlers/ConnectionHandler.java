@@ -4,7 +4,6 @@ import com.webserver.io.Reader;
 import com.webserver.io.Writer;
 import com.webserver.objects.Request;
 import com.webserver.parsers.HttpRequestParser;
-import com.webserver.parsers.RequestParser;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,12 +17,14 @@ public class ConnectionHandler implements Runnable {
     private InputStream clientSocketInputData;
     private OutputStream clientSocketOutputData;
     private HttpRequestParser requestParser;
+    private RequestHandlerFactory requestHandlerFactory;
 
-    public ConnectionHandler(Socket clientSocket, HttpRequestParser requestParser) throws IOException {
+    public ConnectionHandler(Socket clientSocket, HttpRequestParser requestParser, RequestHandlerFactory requestHandlerFactory) throws IOException {
         this.clientSocket = clientSocket;
         this.clientSocketInputData = this.clientSocket.getInputStream();
         this.clientSocketOutputData = this.clientSocket.getOutputStream();
         this.requestParser = requestParser;
+        this.requestHandlerFactory = requestHandlerFactory;
     }
 
     @Override
@@ -41,7 +42,7 @@ public class ConnectionHandler implements Runnable {
             }
 
             Request req = this.requestParser.parse(requestText);
-            RequestHandler requestHandler = RequestHandlerFactory.createRequestHandler(req.getMethod());
+            RequestHandler requestHandler = this.requestHandlerFactory.createRequestHandler(req);
 
             byte[] responseContent = requestHandler.handle(req);
             Writer.writeBytes(responseContent, this.clientSocketOutputData);

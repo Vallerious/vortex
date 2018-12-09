@@ -3,12 +3,18 @@ package com.webserver.objects;
 import com.webserver.enums.Method;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class Request {
     private Method method;
     private String url;
     private HashMap<String, String> headers;
     private String body;
+    private Map<String, String> formData;
+
+    public Request() {
+        this.headers = new HashMap<>();
+    }
 
     public Request(Method method, String url, HashMap<String, String> headers, String body) {
         this.method = method;
@@ -51,5 +57,13 @@ public class Request {
 
     public String getHeader(String key) {
         return this.getHeaders().get(key);
+    }
+
+    public Map<String, String> getFormData() {
+        return formData;
+    }
+
+    public void setFormData(Map<String, String> formData) {
+        this.formData = formData;
     }
 }

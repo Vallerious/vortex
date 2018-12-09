@@ -25,7 +25,9 @@ public class GetRequestHandlerTest {
 
     @Test
     public void testGetRequestWithNonExistingPage() {
-        byte[] response = this.getRequestHandler.handle(this.request);
+        byte[] response = this.getRequestHandler.handle(
+                new Request(Method.GET, "/test", new HashMap<>(), "")
+        );
 
         String textOfResponse = new String(response);
 

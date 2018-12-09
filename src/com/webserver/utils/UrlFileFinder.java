@@ -6,18 +6,17 @@ import com.webserver.objects.Response;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class UrlFileFinder {
-    private String path;
     private boolean isAsset;
     private Path filePath;
     private String mimeType;
     private byte[] bytes;
 
     public UrlFileFinder(String path) throws IOException {
-        this.path = path;
         this.isAsset = path.contains(".");
 
         if (!isAsset) {

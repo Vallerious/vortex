@@ -2,11 +2,10 @@ package com.webserver.server;
 
 import com.webserver.constants.WebConstants;
 import com.webserver.handlers.ConnectionHandler;
-import com.webserver.handlers.RequestHandler;
+import com.webserver.handlers.PostRequestHandler;
+import com.webserver.handlers.RequestHandlerFactory;
 import com.webserver.parsers.HttpRequestParser;
-import com.webserver.parsers.ResponseSerializer;
 
-import javax.lang.model.type.NullType;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -16,9 +15,11 @@ import java.util.concurrent.FutureTask;
 public class Server {
     private ServerSocket serverSocket;
     private int port;
+    private RequestHandlerFactory requestHandlerFactory;
 
     public Server(int port) {
         this.port = port;
+        this.requestHandlerFactory = new RequestHandlerFactory();
     }
 
     public void run() throws IOException {
@@ -31,7 +32,10 @@ public class Server {
                 clientSocket.setSoTimeout(WebConstants.SOCKET_TIMEOUT_MILLISECONDS);
                 // This is like a promise, but we do not need any value to return so
                 // we could have used something else.
-                FutureTask task = new FutureTask(new ConnectionHandler(clientSocket, new HttpRequestParser()), null);
+                FutureTask task = new FutureTask(
+                        new ConnectionHandler(clientSocket, new HttpRequestParser(), this.requestHandlerFactory)
+                        , null
+                );
 
                 task.run();
             } catch(SocketTimeoutException ste) {
@@ -40,5 +44,9 @@ public class Server {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void registerRoute(String route, PostRequestHandler postRequestHandler) {
+        this.requestHandlerFactory.registerHandler(route, postRequestHandler);
     }
 }

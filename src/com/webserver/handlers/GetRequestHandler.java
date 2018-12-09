@@ -4,17 +4,13 @@ import com.webserver.constants.WebConstants;
 import com.webserver.enums.StatusCodes;
 import com.webserver.objects.Request;
 import com.webserver.objects.Response;
-import com.webserver.parsers.HttpRequestParser;
 import com.webserver.parsers.ResponseSerializer;
+import com.webserver.utils.ResponsePayloadLoader;
 import com.webserver.utils.UrlFileFinder;
 
-import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URLConnection;
-import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class GetRequestHandler extends RequestHandler {
     public GetRequestHandler(ResponseSerializer responseSerializer) {
@@ -25,16 +21,28 @@ public class GetRequestHandler extends RequestHandler {
     protected byte[] handle_internal(Request req, Response res) {
         String path = req.getUrl();
 
+        if (path.isEmpty() || path.equals("/")) {
+            path = "/index";
+        }
+
         try {
             UrlFileFinder urlFileFinder = new UrlFileFinder(path);
-            res.setBody(urlFileFinder.getBytes());
-
-            res.addHeader(WebConstants.CONTENT_LENGTH_HEADER, urlFileFinder.getPayloadLength());
-            res.addHeader(WebConstants.CONTENT_TYPE_HEADER, urlFileFinder.getMimeType());
+            ResponsePayloadLoader rpl = new ResponsePayloadLoader(res, urlFileFinder);
+            rpl.load();
 
             res.setStatusCode(StatusCodes.OK);
-        } catch (IOException e) { // TODO: Separate errors better (400, 500, 404)
-            res.setStatusCode(StatusCodes.NotFound);
+        } catch (FileNotFoundException | NoSuchFileException fnfe) { // TODO: Separate errors better (400, 500, 404)
+            try {
+                UrlFileFinder urlFileFinder = new UrlFileFinder("404");
+                ResponsePayloadLoader rpl = new ResponsePayloadLoader(res, urlFileFinder);
+                rpl.load();
+            } catch (IOException e) {
+                // ignore this for now
+            } finally {
+                res.setStatusCode(StatusCodes.NotFound);
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
 
         return this.responseSerializer.toBytes(res);

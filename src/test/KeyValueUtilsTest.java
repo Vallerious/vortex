@@ -33,4 +33,15 @@ public class KeyValueUtilsTest {
 
         Assert.assertEquals("", formattedMap);
     }
+
+    @Test
+    public void testQueryParameterParser() {
+        String queryParams = "email=valericfbg%40gmail.com&password=123&nula=";
+
+        Map<String, String> params = KeyValueUtils.parseQuerylikeParams(queryParams);
+
+        Assert.assertEquals(params.get("email"), "valericfbg%40gmail.com");
+        Assert.assertEquals(params.get("password"), "123");
+        Assert.assertEquals(params.get("nula"), null);
+    }
 }
