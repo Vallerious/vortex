@@ -5,6 +5,7 @@ import com.webserver.enums.StatusCodes;
 import com.webserver.objects.Request;
 import com.webserver.objects.Response;
 import com.webserver.parsers.ResponseSerializer;
+import com.webserver.session.ISession;
 import com.webserver.utils.ResponsePayloadLoader;
 import com.webserver.utils.UrlFileFinder;
 
@@ -13,6 +14,10 @@ import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 
 public class GetRequestHandler extends RequestHandler {
+    public GetRequestHandler(ResponseSerializer responseSerializer, ISession session) {
+        super(responseSerializer, session);
+    }
+
     public GetRequestHandler(ResponseSerializer responseSerializer) {
         super(responseSerializer);
     }

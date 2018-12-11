@@ -2,8 +2,12 @@ package com.webserver.objects;
 
 import com.webserver.enums.Method;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.webserver.constants.WebConstants.URL_ENCODING_CHARSET;
 
 public class Request {
     private Method method;
@@ -14,6 +18,7 @@ public class Request {
 
     public Request() {
         this.headers = new HashMap<>();
+        this.formData = new HashMap<>();
     }
 
     public Request(Method method, String url, HashMap<String, String> headers, String body) {
@@ -21,6 +26,7 @@ public class Request {
         this.url = url;
         this.headers = headers;
         this.body = body;
+        this.formData = new HashMap<>();
     }
 
     public Method getMethod() {
@@ -65,5 +71,13 @@ public class Request {
 
     public void setFormData(Map<String, String> formData) {
         this.formData = formData;
+    }
+
+    public String body(String key) throws UnsupportedEncodingException {
+        if (key != null && this.formData.containsKey(key)) {
+            return URLDecoder.decode(this.formData.get(key), URL_ENCODING_CHARSET);
+        }
+
+        return null;
     }
 }

@@ -52,7 +52,7 @@ public final class KeyValueUtils {
 
         for (String keyValuePair : keyValuePairs) {
             Map.Entry<String, Object> entry = parseStringToEntry(keyValuePair, "=");
-            queryParams.put(entry.getKey(), entry.getValue().toString());
+            queryParams.put(entry.getKey(), entry.getValue() == null ? null : entry.getValue().toString());
         }
 
         return queryParams;

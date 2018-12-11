@@ -5,6 +5,8 @@ import com.webserver.handlers.ConnectionHandler;
 import com.webserver.handlers.PostRequestHandler;
 import com.webserver.handlers.RequestHandlerFactory;
 import com.webserver.parsers.HttpRequestParser;
+import com.webserver.session.ISession;
+import com.webserver.session.Session;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -16,10 +18,12 @@ public class Server {
     private ServerSocket serverSocket;
     private int port;
     private RequestHandlerFactory requestHandlerFactory;
+    private ISession sessionManager;
 
     public Server(int port) {
         this.port = port;
-        this.requestHandlerFactory = new RequestHandlerFactory();
+        this.sessionManager = new Session();
+        this.requestHandlerFactory = new RequestHandlerFactory(this.sessionManager);
     }
 
     public void run() throws IOException {
@@ -47,6 +51,7 @@ public class Server {
     }
 
     public void registerRoute(String route, PostRequestHandler postRequestHandler) {
+        postRequestHandler.setSession(this.sessionManager);
         this.requestHandlerFactory.registerHandler(route, postRequestHandler);
     }
 }

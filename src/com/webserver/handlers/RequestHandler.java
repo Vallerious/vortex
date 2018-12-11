@@ -3,12 +3,19 @@ package com.webserver.handlers;
 import com.webserver.objects.Request;
 import com.webserver.objects.Response;
 import com.webserver.parsers.ResponseSerializer;
+import com.webserver.session.ISession;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public abstract class RequestHandler {
     protected ResponseSerializer responseSerializer;
+    protected ISession session;
+
+    public RequestHandler(ResponseSerializer responseSerializer, ISession session) {
+        this.responseSerializer = responseSerializer;
+        this.session = session;
+    }
 
     public RequestHandler(ResponseSerializer responseSerializer) {
         this.responseSerializer = responseSerializer;
@@ -28,4 +35,8 @@ public abstract class RequestHandler {
     }
 
     protected abstract byte[] handle_internal(Request req, Response res);
+
+    public void setSession(ISession session) {
+        this.session = session;
+    }
 }

@@ -12,4 +12,6 @@ public final class WebConstants {
     public static final String CONTENT_LENGTH_HEADER = "Content-Length";
 
     public static final String CONTENT_TYPE_HEADER = "Content-Type";
+
+    public static final String URL_ENCODING_CHARSET = "UTF-8";
 }
